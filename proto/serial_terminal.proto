@@ -1,0 +1,65 @@
+syntax = "proto3";
+package serial_terminal;
+
+// Hmm maybe another name ?
+service SerialComService {
+    rpc Ping (SerialPingReq) returns (SerialPingRep);
+
+    rpc GetPortList (PortListReq) returns (PortListRep);
+
+    rpc OpenPort (OpenPortReq) returns (OpenPortRep);
+
+    rpc ClosePort (ClosePortReq) returns (ClosePortRep);
+
+    rpc SendOnce (SendOnceReq) returns (SendOnceRep);
+
+    rpc ReadOnce (ReadOnceReq) returns (ReadOnceRep);
+}
+
+message SerialPingReq {}
+
+message SerialPingRep {
+    string content = 1;
+}
+
+message PortListReq {}
+
+message PortListRep {
+    repeated string ports = 1;
+}
+
+message OpenPortReq {
+    string port = 1;
+    uint32 baudrate = 2;
+}
+
+message OpenPortRep {
+    string content = 1;
+    bool success = 2;
+}
+
+message ClosePortReq {
+}
+
+message ClosePortRep {
+    string content = 1;
+    bool success = 2;
+}
+
+
+message SendOnceReq {
+    string content = 1;
+}
+
+message SendOnceRep {
+    string content = 1;
+    bool success = 2;
+}
+
+message ReadOnceReq {
+}
+
+message ReadOnceRep {
+    string content = 1;
+    bool success = 2;
+}
