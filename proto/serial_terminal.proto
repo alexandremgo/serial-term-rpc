@@ -1,7 +1,6 @@
 syntax = "proto3";
 package serial_terminal;
 
-// Hmm maybe another name ?
 service SerialComService {
     rpc Ping (SerialPingReq) returns (SerialPingRep);
 
