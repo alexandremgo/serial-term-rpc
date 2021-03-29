@@ -147,14 +147,30 @@ impl SerialComService for MySerialComService {
 
 }
 
+use structopt::StructOpt;
+use std::net::SocketAddr;
+
+#[derive(StructOpt)]
+struct Cli {
+    #[structopt(help="Addr with port: 127.0.0.1:3333 for ex.", default_value="127.0.0.1:3333")]
+    addr: String,
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "127.0.0.1:3333".parse()?;
+    let args = Cli::from_args();
+    let addr = match args.addr.parse::<SocketAddr>() {
+        Ok(addr) => addr,
+        Err(e) => {
+            println!("Error with address '{}': {}", args.addr, e);
+            return Err(e.into());
+        }
+    };
 
     let port = Arc::new(Mutex::new(SerialPort::new()));
     let serial_com_service = MySerialComService { port: port };
 
-    println!("Running the RPC server ...");
+    println!("Running the RPC server on {} ...", args.addr);
 
     Server::builder()
         .add_service(SerialComServiceServer::new(serial_com_service))
